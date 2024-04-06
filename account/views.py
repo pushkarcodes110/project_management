@@ -1,27 +1,36 @@
-from django.contrib.auth import authenticate, login as auth_login
+
+from django.contrib.auth import authenticate, login as auth_login, get_user_model
 from django.shortcuts import render, redirect
-from django.contrib import messages  # Import messages module for displaying error messages
-from .models import User
+from django.contrib import messages
 
 def login(request):
     if request.method == 'POST':
+        print('count1')
         email = request.POST.get('email', '')
         password = request.POST.get('password', '')
+        print('Email:', email)
+        print('Password:', password)
 
         if email and password:
-            user = authenticate(request, email=email, password=password)
-
-            if user is not None:
-                auth_login(request, user)
-                return redirect('/')
-            else:
-                # Display an error message if authentication fails
-                messages.error(request, 'Invalid email or password. Please try again.')
+            print('count2')
+            User = get_user_model()
+            try:
+                user = User.objects.authenticate(request, email=email, password=password)
+                print('user:', user)
+                if User is not None:
+                    print('count3')
+                    auth_login(request, user)
+                    print('Logged in user:', request.user.email)
+                    print('Is authenticated?', request.user.is_authenticated)
+                    return redirect('/')
+                else:
+                    print('Authentication failed')
+                    messages.error(request, 'Invalid email or password.')
+            except Exception as e:
+                print('Error:', e)
+                messages.error(request, 'An error occurred during login.')
 
     return render(request, 'account/login.html')
-
-from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
 
 def signup(request):
     if request.method == 'POST':
@@ -32,7 +41,9 @@ def signup(request):
 
         if name and email and password1 and password2:
             if password1 == password2:
-                user = User.objects.create_user(username=name, email=email, password=password1)
+                User = get_user_model()
+                # Create user with create_user method from get_user_model()
+                user = User.objects.create_user(name=name, email=email, password=password1)
                 print('User created:', user)
                 return redirect('/login/')
             else:
