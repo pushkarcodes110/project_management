@@ -15,7 +15,7 @@ def login(request):
             print('count2')
             User = get_user_model()
             try:
-                user = User.objects.authenticate(request, email=email, password=password)
+                user = authenticate(request, email=email, password=password)
                 print('user:', user)
                 if User is not None:
                     print('count3')
