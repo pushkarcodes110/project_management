@@ -5,30 +5,21 @@ from django.contrib import messages
 
 def login(request):
     if request.method == 'POST':
-        print('count1')
         email = request.POST.get('email', '')
         password = request.POST.get('password', '')
-        print('Email:', email)
-        print('Password:', password)
 
         if email and password:
-            print('count2')
-            User = get_user_model()
-            try:
-                user = authenticate(request, email=email, password=password)
+            
+                user = authenticate(request, username=email, password=password)
                 print('user:', user)
-                if User is not None:
-                    print('count3')
+                if user is not None:
+                    
                     auth_login(request, user)
                     print('Logged in user:', request.user.email)
                     print('Is authenticated?', request.user.is_authenticated)
                     return redirect('/')
                 else:
-                    print('Authentication failed')
                     messages.error(request, 'Invalid email or password.')
-            except Exception as e:
-                print('Error:', e)
-                messages.error(request, 'An error occurred during login.')
 
     return render(request, 'account/login.html')
 
