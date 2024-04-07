@@ -1,4 +1,5 @@
-Todos
+Roadmap 
+
     -DONE Create base template
     -DONE Create front page template
     -DONE Create about page template
@@ -40,10 +41,3 @@ Todos
     -DONE Detail page for notes
     -DONE Edit note
     -DONE Delete note
-
-    -Deployment
-        -DONE Set up requirements.txt
-        -DONE Acorn file
-        -DONE Docker file
-        -Configure settings.py
-        -Deploy and test
